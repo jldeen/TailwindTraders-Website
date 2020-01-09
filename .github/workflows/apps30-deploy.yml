@@ -27,16 +27,25 @@ jobs:
     # build/push docker image
     - name: 'build/push'
       run: |
-        docker build Source/Tailwind.Traders.Web/ -t ${{ secrets.CONTAINER_REGISTRY }}/tailwindtraders30jd:$GITHUB_SHA
-        docker push ${{ secrets.CONTAINER_REGISTRY }}/tailwindtraders30jd:$GITHUB_SHA
+        docker build Source/Tailwind.Traders.Web/ -t ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.WEBAPP_NAME }}:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.WEBAPP_NAME }}:$GITHUB_SHA
     
-    # deploy to azure webapp
-    - name: 'Azure WebApp Container Deploy'
-      uses: azure/webapps-container-deploy@v1
-      with:
-        app-name: 'tailwindtraders30jd'
-        images: ${{secrets.CONTAINER_REGISTRY}}/tailwindtraders30jd:${{ github.sha }}
-    
+    - name: 'Create appservice plan'
+      run: |
+        az appservice plan create -g ${{ secrets.RESOURCE_GROUP }} -n ${{ secrets.WEBAPP_NAME }}   
+
+    # create webapp
+    - name: 'webapp create'
+      run: |
+        az webapp create --name ${{ secrets.WEBAPP_NAME }} --plan ${{ secrets.WEBAPP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} -i ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
+
+    # # deploy webapp
+    # - name: 'Azure WebApp Container Deploy'
+    #   uses: azure/webapps-container-deploy@v1
+    #   with:
+    #     app-name: '${{ secrets.WEBAPP_NAME }}'
+    #     images: ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
+
     # logout
     - name: 'Azure logout'
       run: |
