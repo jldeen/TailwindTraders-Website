@@ -43,7 +43,7 @@ jobs:
 
         az webapp config container set --name ${{ secrets.WEBAPP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }} --docker-registry-server-url https://${{ secrets.CONTAINER_REGISTRY }} --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
         
-        az webapp config appsettings set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.WEBAPP_NAME }} --settings apiUrl=/api/v1 ApiUrlShoppingCart=/api/v1 MongoConnectionString=${{ secrets.MONGODB_CONNECTION_STRING }} SqlConnectionString=${{ secrets.SQL_CONNECTION_STRING }}
+        az webapp config appsettings set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.WEBAPP_NAME }} --settings apiUrl=/api/v1 ApiUrlShoppingCart=/api/v1 MongoConnectionString=${{ secrets.MONGODB_CONNECTION_STRING }}
 
     # logout
     - name: 'Azure logout'
