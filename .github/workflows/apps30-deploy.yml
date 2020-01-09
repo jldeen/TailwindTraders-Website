@@ -4,7 +4,7 @@ name: apps30-containerDeploy
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     
     # checkout branch
