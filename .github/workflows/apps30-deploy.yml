@@ -1,0 +1,43 @@
+on: [push]
+
+name: apps30-containerDeploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+    # checkout branch
+    - uses: actions/checkout@master
+
+    # log into Azure
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # docker login
+    - name: 'Docker Login'
+      uses: greenie-msft/container-actions/docker-login@master
+      with:
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    # build/push docker image
+    - name: 'build/push'
+      run: |
+        docker build Source/Tailwind.Traders.Web/ -t ${{ secrets.CONTAINER_REGISTRY }}/tailwindtraders30jd:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/tailwindtraders30jd:$GITHUB_SHA
+    
+    # deploy to azure webapp
+    - name: 'Azure WebApp Container Deploy'
+      uses: azure/webapps-container-deploy@v1
+      with:
+        app-name: 'tailwindtraders30jd'
+        images: ${{secrets.CONTAINER_REGISTRY}}/tailwindtraders30jd:${{ github.sha }}
+    
+    # logout
+    - name: 'Azure logout'
+      run: |
+        az logout
