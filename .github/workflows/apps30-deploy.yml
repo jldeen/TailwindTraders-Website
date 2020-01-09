@@ -37,20 +37,13 @@ jobs:
     # create webapp
     - name: 'webapp create'
       run: |
-        az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.WEBAPP_NAME }} --name ${{ secrets.WEBAPP_NAME }} --deployment-container-image-name ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
+        az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.WEBAPP_NAME }} --name ${{ secrets.WEBAPP_NAME }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
 
         az webapp log config -n ${{ secrets.WEBAPP_NAME }} -g ${{ secrets.RESOURCE_GROUP }} --web-server-logging filesystem
 
-        az webapp config container set --name ${{ secrets.WEBAPP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }} --docker-registry-server-url https://${{secrets.CONTAINER_REGISTRY}} --docker-registry-server-user ${{secrets.REGISTRY_USERNAME}} --docker-registry-server-password ${{secrets.REGISTRY_PASSWORD}}
+        az webapp config container set --name ${{ secrets.WEBAPP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }} --docker-registry-server-url https://${{ secrets.CONTAINER_REGISTRY }} --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
         
         az webapp config appsettings set --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.WEBAPP_NAME }} --settings apiUrl=/api/v1 ApiUrlShoppingCart=/api/v1 MongoConnectionString=${{ secrets.MONGODB_CONNECTION_STRING }} SqlConnectionString=${{ secrets.SQL_CONNECTION_STRING }}
-
-    # # deploy webapp
-    # - name: 'Azure WebApp Container Deploy'
-    #   uses: azure/webapps-container-deploy@v1
-    #   with:
-    #     app-name: '${{ secrets.WEBAPP_NAME }}'
-    #     images: ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
 
     # logout
     - name: 'Azure logout'
