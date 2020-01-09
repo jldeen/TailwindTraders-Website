@@ -37,7 +37,12 @@ jobs:
     # create webapp
     - name: 'webapp create'
       run: |
-        az webapp create --name ${{ secrets.WEBAPP_NAME }} --plan ${{ secrets.WEBAPP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} -i ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
+
+        az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.WEBAPP_NAME }} --name ${{ secrets.WEBAPP_NAME }} --deployment-container-image-name ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }}
+
+        az webapp log config -n ${{ secrets.WEBAPP_NAME }} -g ${{ secrets.RESOURCE_GROUP }} --web-server-logging filesystem
+
+        az webapp config container set --name ${{ secrets.WEBAPP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{secrets.CONTAINER_REGISTRY}}/${{ secrets.WEBAPP_NAME }}:${{ github.sha }} --docker-registry-server-url ${{secrets.CONTAINER_REGISTRY}} --docker-registry-server-user ${{secrets.REGISTRY_USERNAME}} --docker-registry-server-password ${{secrets.REGISTRY_PASSWORD}}
 
     # # deploy webapp
     # - name: 'Azure WebApp Container Deploy'
