@@ -9,7 +9,7 @@ env:
   cosmosDBName: apps30twtnosqlge
   sqlDBName: apps30twtnosql
   webappName: igniteapps30
-  acrName: igniteapps30acr
+  acrName: igniteapps30acrjd2
 
 jobs:
   deployInfra:
