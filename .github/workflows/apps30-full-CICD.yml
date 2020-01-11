@@ -7,7 +7,7 @@ env:
   location: eastus
   subName: "Ignite The Tour"
   cosmosDBName: apps30twtnosqlgejd
-  sqlDBName: apps30twtnosqljd
+  sqlDBName: apps30twtsqljd
   webappName: igniteapps30jd
   acrName: igniteapps30acrjd
 
