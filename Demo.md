@@ -1,13 +1,13 @@
 ```
-resourceGroup: live-igniteapps30
-location: eastus
-subName: "Ignite The Tour"
-cosmosDBName: liveapps30twtnosqlge
-sqlDBName: liveapps30twtsql
-webappName: liveigniteapps30
-acrName: liveigniteapps30acr
-adminUser: twtadmin
-adminPassword: twtapps30pD
+resourceGroup=live-igniteapps30
+location=eastus
+subName="Ignite The Tour"
+cosmosDBName=liveapps30twtnosqlge
+sqlDBName=liveapps30twtsql
+webappName=liveigniteapps30
+acrName=liveigniteapps30acr
+adminUser=twtadmin
+adminPassword=twtapps30pD
 ```
 
 ### Resource Group Creation
@@ -36,18 +36,24 @@ adminPassword: twtapps30pD
 
 # Azure Container Registry Creation
 
-`az acr create --resource-group $resourceGroup --name $acrName --sku Basic --subscription "$subName" --admin-enabled true az appservice plan create -g $resourceGroup -n $webappName --is-linux --sku S1`
+`az acr create --resource-group $resourceGroup --name $acrName --sku Basic --subscription "$subName" --admin-enabled true`
+
+`az appservice plan create -g $resourceGroup -n $webappName --is-linux --sku S1`
 
 # Build our image
 
 ```
 cd igniteapps30/TailwindTraders-Website/Source/Tailwind.Traders.Web/
-az acr build --subscription  "Ignite The Tour" --registry 001igniteapps30acr --image $webappName .
+az acr build --subscription  "Ignite The Tour" --registry $acrName --image $webappName .
 ```
+
+# Create our App Service Service Plan
+
+`az appservice plan create -g $resourceGroup -n $webappName --is-linux --sku S1`
 
 # Create our App Service Container Web App
 
-`az webapp create --resource-group $resourceGroup --plan $webappName --name $webappName --deployment-container-image-name liveigniteapps30acr.azurecr.io/$webappName:ca1`
+`az webapp create --resource-group $resourceGroup --plan $webappName --name $webappName --deployment-container-image-name $acrName.azurecr.io/$webappName:ca1`
 
 # Configure loggin on our web app
 
