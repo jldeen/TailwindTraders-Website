@@ -90,8 +90,8 @@ jobs:
     # build/push docker image
     - name: 'build/push'
       run: |
-        docker build Source/Tailwind.Traders.Web/ -t ${{ secrets.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
-        docker push ${{ secrets.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
+        docker build Source/Tailwind.Traders.Web/ -t ${{ env.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
+        docker push ${{ env.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
   
   deployContainer:
     runs-on: self-hosted
@@ -113,7 +113,7 @@ jobs:
       # create webapp
       - name: 'webapp create'
         run: |
-          az webapp create --resource-group $resourceGroup --plan $webappName --name $webappName --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}/$webappName:${{ github.sha }}
+          az webapp create --resource-group $resourceGroup --plan $webappName --name $webappName --deployment-container-image-name ${{ env.CONTAINER_REGISTRY }}/$webappName:${{ github.sha }}
 
           az webapp log config -n $webappName -g $resourceGroup --web-server-logging filesystem
 
