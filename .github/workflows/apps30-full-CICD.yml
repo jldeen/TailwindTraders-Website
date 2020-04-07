@@ -97,7 +97,7 @@ jobs:
     runs-on: self-hosted
     needs: buildContainer
     steps:
-      - name: 'Get Connection Strings'
+      - name: 'Set deployment dependencies'
         run: |
           echo "Retrieving Mongo and SQL Connection strings..."
 
@@ -109,6 +109,18 @@ jobs:
           echo "::set-env name=SQL_CONNECTION_STRING::$(az sql db show-connection-string --server $sqlDBName --name tailwind -c ado.net --subscription "$subName" | jq -r .)"
 
           echo "::set-env name=MONGODB_CONNECTION_STRING::$(az cosmosdb list-connection-strings --name $cosmosDBName  --resource-group $resourceGroup --query connectionStrings[0].connectionString -o tsv --subscription "$subName")"
+
+
+          echo "Retrieving Container Registry info..."
+
+          acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
+          CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)
+
+          # acr/container registry variables
+          echo "::set-env name=CONTAINER_REGISTRY::$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)"
+
+          echo "::set-env name=REGISTRY_USERNAME::$(az acr credential show -n $acrName --query username -o tsv)"
+          echo "::set-env name=REGISTRY_PASSWORD::$(az acr credential show -n $acrName -o tsv --query passwords[0].value)"
 
       # create webapp
       - name: 'webapp create'
