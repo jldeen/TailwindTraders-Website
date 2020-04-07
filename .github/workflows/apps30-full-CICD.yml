@@ -3,13 +3,13 @@ on: [push]
 name: apps30-full-cicd
 
 env:
-  resourceGroup: igniteapps30jd
+  resourceGroup: apps30jd
   location: eastus
   subName: "Ignite The Tour"
   cosmosDBName: apps30twtnosqlgejd
   sqlDBName: apps30twtsqljd
-  webappName: igniteapps30jd
-  acrName: igniteapps30acrjd
+  webappName: apps30jd
+  acrName: apps30acrjd
 
 jobs:
   deployInfra:
