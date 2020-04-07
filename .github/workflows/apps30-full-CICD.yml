@@ -103,8 +103,8 @@ jobs:
 
           az sql db show-connection-string --server $sqlDBName --name tailwind -c ado.net --subscription "$subName" | jq -r . > tmp.txt
 
-          sed -i "" "s|<username>|${ secrets.SQL_ADMIN }|g" tmp.txt
-          sed -i "" "s|<password>|${ secrets.SQL_PASSWORD }|g" tmp.txt
+          sed -i "" "s|<username>|${ ${{ secrets.SQL_ADMIN }} }|g" tmp.txt
+          sed -i "" "s|<password>|${ ${{ secrets.SQL_PASSWORD }} }|g" tmp.txt
 
           SQL_CONNECTION_STRING=$(cat tmp.txt)
 
