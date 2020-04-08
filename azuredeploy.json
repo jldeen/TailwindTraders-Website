@@ -1,6 +1,6 @@
 {
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
+  "contentVersion": "1.0.0.1",
   "parameters": {
     "siteName": {
       "type": "string"
@@ -167,7 +167,7 @@
           ],
           "alwaysOn": "[variables('alwaysOn')]"
         },
-        "serverFarmId": "[concat('/subscriptions/', variables('subscriptionId'),'/resourcegroups/', variables('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "hostingEnvironment": "[variables('hostingEnvironment')]",
         "clientAffinityEnabled": true
       },

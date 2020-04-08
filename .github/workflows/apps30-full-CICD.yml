@@ -15,89 +15,88 @@ jobs:
   deployInfra:
     runs-on: self-hosted
     steps:
-    # checkout branch
-    - uses: actions/checkout@master
+      # checkout branch
+      - uses: actions/checkout@master
 
-    # log into Azure
-    - name: 'Login via Azure CLI'
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-    # create resource group
-    - name: 'Create Resource Group'
-      run: |
-        az group create --subscription "$subName" --name $resourceGroup --location $location
-    
-    # create VNet
-    - name: 'Create Virtual Network'
-      run: |
-        az network vnet create --name igniteapps30vnet --subscription "$subName" --resource-group $resourceGroup --subnet-name default
+      # log into Azure
+      - name: "Login via Azure CLI"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # create cosmos db
-    - name: 'Create Cosmos DB'
-      run: |
-        az cosmosdb create --name $cosmosDBName --resource-group $resourceGroup --kind MongoDB --subscription "$subName"
-    
-    # create SQL Instance
-    - name: 'Create SQL Instance'
-      run: |
-        az sql server create --location $location --resource-group $resourceGroup --name $sqlDBName --admin-user ${{ secrets.SQL_ADMIN }} --admin-password ${{ secrets.SQL_PASSWORD }} --subscription "$subName"
+      # create resource group
+      - name: "Create Resource Group"
+        run: |
+          az group create --subscription "$subName" --name $resourceGroup --location $location
 
-        az sql server firewall-rule create --resource-group $resourceGroup --server $sqlDBName --name azure --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 --subscription "$subName"
+      # create VNet
+      - name: "Create Virtual Network"
+        run: |
+          az network vnet create --name igniteapps30vnet --subscription "$subName" --resource-group $resourceGroup --subnet-name default
 
-        az sql db create --resource-group $resourceGroup --server $sqlDBName --name tailwind --subscription "$subName"
-    
-    # create ACR
-    - name: 'Create Azure Container Registry'
-      run: |
-        az acr create --resource-group $resourceGroup --name $acrName --sku Basic --subscription "$subName" --admin-enabled true
+      # create cosmos db
+      - name: "Create Cosmos DB"
+        run: |
+          az cosmosdb create --name $cosmosDBName --resource-group $resourceGroup --kind MongoDB --subscription "$subName"
 
-    # create appservice plan    
-    - name: 'Create appservice plan'
-      run: |
-        az appservice plan create -g $resourceGroup -n $webappName --is-linux --sku S1
+      # create SQL Instance
+      - name: "Create SQL Instance"
+        run: |
+          az sql server create --location $location --resource-group $resourceGroup --name $sqlDBName --admin-user ${{ secrets.SQL_ADMIN }} --admin-password ${{ secrets.SQL_PASSWORD }} --subscription "$subName"
+
+          az sql server firewall-rule create --resource-group $resourceGroup --server $sqlDBName --name azure --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 --subscription "$subName"
+
+          az sql db create --resource-group $resourceGroup --server $sqlDBName --name tailwind --subscription "$subName"
+
+      # create ACR
+      - name: "Create Azure Container Registry"
+        run: |
+          az acr create --resource-group $resourceGroup --name $acrName --sku Basic --subscription "$subName" --admin-enabled true
+
+      # create appservice plan
+      - name: "Create appservice plan"
+        run: |
+          az appservice plan create -g $resourceGroup -n $webappName --is-linux --sku S1
 
   buildContainer:
     runs-on: self-hosted
     needs: deployInfra
     steps:
-    
-    # checkout branch
-    - uses: actions/checkout@master
+      # checkout branch
+      - uses: actions/checkout@master
 
-    - name: 'Get ACR Information'
-      run: |
-        echo "Retrieving Container Registry info..."
+      - name: "Get ACR Information"
+        run: |
+          echo "Retrieving Container Registry info..."
 
-        acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
-        CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)
+          acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
+          CONTAINER_REGISTRY=$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)
 
-        # acr/container registry variables
-        echo "::set-env name=CONTAINER_REGISTRY::$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)"
+          # acr/container registry variables
+          echo "::set-env name=CONTAINER_REGISTRY::$(az acr list -g $resourceGroup -o tsv --query [0].loginServer)"
 
-        echo "::set-env name=REGISTRY_USERNAME::$(az acr credential show -n $acrName --query username -o tsv)"
-        echo "::set-env name=REGISTRY_PASSWORD::$(az acr credential show -n $acrName -o tsv --query passwords[0].value)"
-    
-    # docker login
-    - name: "docker login"
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
-        username: ${{ env.REGISTRY_USERNAME }}
-        password: ${{ env.REGISTRY_PASSWORD }}
-    
-    # build/push docker image
-    - name: 'build/push'
-      run: |
-        docker build Source/Tailwind.Traders.Web/ -t ${{ env.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
-        docker push ${{ env.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
-  
+          echo "::set-env name=REGISTRY_USERNAME::$(az acr credential show -n $acrName --query username -o tsv)"
+          echo "::set-env name=REGISTRY_PASSWORD::$(az acr credential show -n $acrName -o tsv --query passwords[0].value)"
+
+      # docker login
+      - name: "docker login"
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ env.REGISTRY_USERNAME }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+
+      # build/push docker image
+      - name: "build/push"
+        run: |
+          docker build Source/Tailwind.Traders.Web/ -t ${{ env.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
+          docker push ${{ env.CONTAINER_REGISTRY }}/$webappName:$GITHUB_SHA
+
   deployContainer:
     runs-on: self-hosted
     needs: buildContainer
     steps:
-      - name: 'Set deployment dependencies'
+      - name: "Set deployment dependencies"
         run: |
           echo "Retrieving Mongo and SQL Connection strings..."
 
@@ -117,7 +116,6 @@ jobs:
 
           echo "::set-env name=MONGODB_CONNECTION_STRING::$MONGODB_CONNECTION_STRING"
 
-
           echo "Retrieving Container Registry info..."
 
           acrName=$(az acr list -g $resourceGroup -o tsv --query [0].name)
@@ -130,17 +128,23 @@ jobs:
           echo "::set-env name=REGISTRY_PASSWORD::$(az acr credential show -n $acrName -o tsv --query passwords[0].value)"
 
       # create webapp
-      - name: 'webapp create'
+      - name: "webapp create"
         run: |
           az webapp create --resource-group $resourceGroup --plan $webappName --name $webappName --deployment-container-image-name ${{ env.CONTAINER_REGISTRY }}/$webappName:${{ github.sha }}
 
           az webapp log config -n $webappName -g $resourceGroup --web-server-logging filesystem
 
           az webapp config container set --name $webappName --resource-group $resourceGroup --docker-custom-image-name ${{ env.CONTAINER_REGISTRY }}/$webappName:${{ github.sha }} --docker-registry-server-url https://${{ env.CONTAINER_REGISTRY }} --docker-registry-server-user ${{ env.REGISTRY_USERNAME }} --docker-registry-server-password ${{ env.REGISTRY_PASSWORD }}
-          
-          az webapp config appsettings set --resource-group $resourceGroup --name $webappName --settings apiUrl=/api/v1 ApiUrlShoppingCart=/api/v1 productImagesUrl=https://raw.githubusercontent.com/microsoft/TailwindTraders-Backend/master/Deploy/tailwindtraders-images/product-detail SqlConnectionString="${{ env.SQL_CONNECTION_STRING }}" MongoConnectionString=${{ env.MONGODB_CONNECTION_STRING }}
+
+          az webapp config appsettings set --resource-group $resourceGroup \
+            --name $webappName \
+            --settings apiUrl=/api/v1 \
+                ApiUrlShoppingCart=/api/v1 \
+                productImagesUrl=https://raw.githubusercontent.com/microsoft/TailwindTraders-Backend/master/Deploy/tailwindtraders-images/product-detail \
+                SqlConnectionString="${{ env.SQL_CONNECTION_STRING }}" \
+                MongoConnectionString=${{ env.MONGODB_CONNECTION_STRING }}
 
       # logout
-      - name: 'Azure logout'
+      - name: "Azure logout"
         run: |
           az logout
