@@ -113,9 +113,9 @@ jobs:
           MONGODB_CONNECTION_STRING=$(az cosmosdb list-connection-strings --name $cosmosDBName  --resource-group $resourceGroup --query connectionStrings[0].connectionString -o tsv --subscription "$subName")
 
           # persist environment variables
-          echo "::set-env name=SQL_CONNECTION_STRING::$(az sql db show-connection-string --server $sqlDBName --name tailwind -c ado.net --subscription "$subName" | jq -r .)"
+          echo "::set-env name=SQL_CONNECTION_STRING::$SQL_CONNECTION_STRING"
 
-          echo "::set-env name=MONGODB_CONNECTION_STRING::$(az cosmosdb list-connection-strings --name $cosmosDBName  --resource-group $resourceGroup --query connectionStrings[0].connectionString -o tsv --subscription "$subName")"
+          echo "::set-env name=MONGODB_CONNECTION_STRING::$MONGODB_CONNECTION_STRING"
 
 
           echo "Retrieving Container Registry info..."
