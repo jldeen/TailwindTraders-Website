@@ -15,6 +15,8 @@ inf:
 
 B2C:
   UseB2C: "false"
+  ReactAppUseB2C: "false"
+  Scopes: ""
   B2CIssuer: ""
   Authority: ""
   tenantID: ""
