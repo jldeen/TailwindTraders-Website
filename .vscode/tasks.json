@@ -37,6 +37,22 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "dev-spaces.connect.service",
+            "type": "dev-spaces.connect.service",
+            "service": "ttweb",
+            "ports": [
+                80
+            ]
+        },
+        {
+            "label": "dev-spaces.connect.compound",
+            "dependsOn": [
+                "dev-spaces.connect.service",
+                "build"
+            ],
+            "dependsOrder": "sequence"
         }
     ]
 }
