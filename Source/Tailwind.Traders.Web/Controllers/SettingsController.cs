@@ -34,13 +34,7 @@ namespace Tailwind.Traders.Web.Controllers
         public ActionResult<Settings> GetSettings()
         {
             var settings = _settings;
-            if (Request.Headers.TryGetValue("routing.visualstudio.io/route-from", out var lpkRouteFrom))
-            {
-                settings = _settings.Clone();
-                settings.UselpkRouteFrom(lpkRouteFrom.FirstOrDefault() ?? string.Empty);
-            }
-
-            if (Request.Headers.TryGetValue("routing.visualstudio.io/route-on-header", out var lpkRouteHeader))
+            if (Request.Headers.TryGetValue("routing.visualstudio.io/route-on-header=kubernetes-route-as", out var lpkRouteHeader))
             {
                 settings = _settings.Clone();
                 settings.UselpkRouteHeader(lpkRouteHeader.FirstOrDefault() ?? string.Empty);

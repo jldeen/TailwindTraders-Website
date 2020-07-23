@@ -6,8 +6,6 @@ namespace Tailwind.Traders.Web
     {
         public Settings()
         {
-            LPKRouteFrom = string.Empty;
-
             LPKRouteHeader = string.Empty;
         }
         public string Auth { get; set; }
@@ -31,13 +29,9 @@ namespace Tailwind.Traders.Web
 
         // This is set by the SettingsController, do not set via config because will be overriden
 
-        public string LPKRouteFrom { get; private set; }
-
         public string LPKRouteHeader { get; private set; }
 
         public string ProductImagesUrl { get; set; }
-
-        public void UselpkRouteFrom(string lpkRouteFrom) => LPKRouteFrom = lpkRouteFrom;
 
         public void UselpkRouteHeader(string lpkRouteHeader) => LPKRouteHeader = lpkRouteHeader;
 
