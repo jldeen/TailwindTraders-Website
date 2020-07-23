@@ -14,9 +14,9 @@ const _HeadersConfig = (token, lpkRouteHeader = undefined) => {
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     if (lpkRouteHeader) {
-        headers['routing.visualstudio.io/route-on-header=kubernetes-route-as'] = lpkRouteHeader;
+        headers['kubernetes-route-as'] = lpkRouteHeader;
     }
-
+    console.log("kubernetes-route-as= ", lpkRouteHeader);
     return { headers: headers };
 };
 
