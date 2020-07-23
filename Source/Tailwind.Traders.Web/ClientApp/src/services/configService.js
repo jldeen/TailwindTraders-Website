@@ -10,10 +10,14 @@ const B2cAuthority = process.env.REACT_APP_B2CAUTHORITY;
 const B2cClientId = process.env.REACT_APP_B2CCLIENTID;
 const B2cScopes = process.env.REACT_APP_B2CSCOPES;
 
-const _HeadersConfig = (token, devspaces = undefined) => {
+const _HeadersConfig = (token, lpkRouteFrom = undefined, lpkRouteHeader = undefined) => {
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    if (devspaces) {
-        headers['kubernetes-route-as'] = devspaces;
+    if (lpkRouteFrom) {
+        headers['routing.visualstudio.io/route-from'] = lpkRouteFrom;
+    }
+
+    if (lpkRouteHeader) {
+        headers['routing.visualstudio.io/route-on-header'] = lpkRouteHeader;
     }
 
     return { headers: headers };
@@ -44,14 +48,15 @@ const ConfigService = {
                 this._B2cScopes = settingsResponse.data.b2CAuth.scopes;
             }
 
-            this._devspacesName = settingsResponse.data.devspacesName;
+            this._lpkRouteFrom = settingsResponse.data.lpkRouteFrom;
+            this._lpkRouteHeader = settingsResponse.data.lpkRouteHeader;
             this._applicationInsightsIntrumentationKey = settingsResponse.data.applicationInsights.instrumentationKey;
             this._debugInformation = settingsResponse.data.debugInformation;
         }
     },
 
     HeadersConfig(token = undefined) {
-        return _HeadersConfig(token, this._devspacesName);
+        return _HeadersConfig(token, this._lpkRouteFrom, this._lpkRouteHeader);
     }
 }
 

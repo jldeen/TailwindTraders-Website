@@ -34,13 +34,19 @@ namespace Tailwind.Traders.Web.Controllers
         public ActionResult<Settings> GetSettings()
         {
             var settings = _settings;
-            if (Request.Headers.TryGetValue("azds-route-as", out var devspaceName)) 
+            if (Request.Headers.TryGetValue("routing.visualstudio.io/route-from", out var lpkRouteFrom))
             {
                 settings = _settings.Clone();
-                settings.UseDevspacesName(devspaceName.FirstOrDefault() ?? string.Empty);
+                settings.UselpkRouteFrom(lpkRouteFrom.FirstOrDefault() ?? string.Empty);
+            }
+
+            if (Request.Headers.TryGetValue("routing.visualstudio.io/route-on-header", out var lpkRouteHeader))
+            {
+                settings = _settings.Clone();
+                settings.UselpkRouteHeader(lpkRouteHeader.FirstOrDefault() ?? string.Empty);
             }
             return Ok(settings);
         }
 
-     }
+    }
 }
