@@ -39,7 +39,7 @@ const ConfigService = {
             this._apiUrlShoppingCart = settingsResponse.data.apiUrlShoppingCart;
             this._UseB2C = settingsResponse.data.useB2C;
 
-            if (this._UseB2C) {
+            if(this._UseB2C) {
                 this._B2cAuthority = settingsResponse.data.b2CAuth.authority;
                 this._B2cClientId = settingsResponse.data.b2CAuth.clientId;
                 this._B2cScopes = settingsResponse.data.b2CAuth.scopes;

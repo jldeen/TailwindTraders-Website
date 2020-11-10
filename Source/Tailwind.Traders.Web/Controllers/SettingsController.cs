@@ -42,5 +42,5 @@ namespace Tailwind.Traders.Web.Controllers
             return Ok(settings);
         }
 
-    }
+     }
 }

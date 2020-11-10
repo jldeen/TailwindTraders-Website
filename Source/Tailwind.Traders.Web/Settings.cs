@@ -2,15 +2,15 @@ using Newtonsoft.Json;
 
 namespace Tailwind.Traders.Web
 {
-    public class Settings
+    public class Settings 
     {
         public Settings()
         {
             LPKRouteHeader = string.Empty;
         }
-        public string Auth { get; set; }
-        public string ApiUrl { get; set; }
-        public string ApiUrlShoppingCart { get; set; }
+        public string Auth  {get; set;}
+        public string ApiUrl {get; set;}
+        public string ApiUrlShoppingCart {get; set;}
         public bool UseB2C { get; set; }
         [JsonIgnore]
         public string SqlConnectionString { get; set; }
@@ -18,17 +18,17 @@ namespace Tailwind.Traders.Web
         public string MongoConnectionString { get; set; }
 
         public B2CAuth B2CAuth { get; set; }
-        public CartSettings Cart { get; set; }
+        public CartSettings Cart {get; set;}
         public ApplicationInsightsSettings ApplicationInsights { get; set; }
             = new ApplicationInsightsSettings();
 
         public DebugInformationSettings DebugInformation { get; set; }
             = new DebugInformationSettings();
 
-        public bool ByPassShoppingCartApi { get; set; }
+        public bool ByPassShoppingCartApi {get; set;}
 
         // This is set by the SettingsController, do not set via config because will be overriden
-
+        
         public string LPKRouteHeader { get; private set; }
 
         public string ProductImagesUrl { get; set; }
@@ -39,7 +39,7 @@ namespace Tailwind.Traders.Web
 
         public Settings Clone()
         {
-            var clone = new Settings()
+            var clone = new Settings() 
             {
                 ApiUrl = ApiUrl,
                 Auth = Auth,
@@ -48,9 +48,9 @@ namespace Tailwind.Traders.Web
                 UseB2C = UseB2C
             };
 
-            if (Cart != null)
+            if (Cart != null) 
             {
-                clone.Cart = new CartSettings()
+                clone.Cart = new CartSettings() 
                 {
                     AuthKey = Cart?.AuthKey,
                     ContainerId = Cart?.ContainerId,
@@ -63,12 +63,11 @@ namespace Tailwind.Traders.Web
         }
     }
 
-    public class CartSettings
-    {
-        public string AuthKey { get; set; }
-        public string ContainerId { get; set; }
-        public string DatabaseId { get; set; }
-        public string Host { get; set; }
+    public class CartSettings {
+        public string AuthKey {get; set;}
+        public string ContainerId {get; set;}
+        public string DatabaseId {get; set;}
+        public string Host {get; set;}
     }
     public class B2CAuth
     {

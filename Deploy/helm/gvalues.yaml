@@ -9,28 +9,15 @@ inf:
     id: ""
   ingress:
     webbff:
-      path: /webbff
+      path: /webbff    
     cart:
       path: /cart-api
-
-B2C:
-  UseB2C: "false"
-  ReactAppUseB2C: "false"
-  Scopes: ""
-  B2CIssuer: ""
-  Authority: ""
-  tenantID: ""
-  clientID: ""
-  policyName: ""
-  identityMetadata: ""
-  issuer: ""
-
 az:
   productvisitsurl: ""
 
 nodeSelector:
   "kubernetes.io/os": linux
-
+  
 # Shared ingress configurations
 ingress:
   enabled: true
@@ -41,8 +28,8 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/rewrite-target: /
-  #  hosts:
-  #    - <guid>.<region>.aksapp.io   # NOT NEEDED. SET BY SCRIPTS
+#  hosts:
+#    - <guid>.<region>.aksapp.io   # NOT NEEDED. SET BY SCRIPTS
 
   tls: []
   #  - secretName: chart-example-tls
