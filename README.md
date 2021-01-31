@@ -2,7 +2,11 @@
 
 ![Tailwind Traders Website](Documents/Images/Website.png)
 
-[![Build status](https://dev.azure.com/TailwindTraders/Website/_apis/build/status/Website-CI)](https://dev.azure.com/TailwindTraders/Website/_build?definitionId=22)
+## Build Status
+
+![Web regular AppService](https://github.com/microsoft/TailwindTraders-Website/workflows/Web%20regular%20AppService/badge.svg)
+![Web in AKS](https://github.com/microsoft/TailwindTraders-Website/workflows/Web%20in%20AKS/badge.svg)
+![Deploy in a containerized App Service](https://github.com/microsoft/TailwindTraders-Website/workflows/Deploy%20in%20a%20containerized%20App%20Service/badge.svg)
 
 You can take a look at our live running website following this address: [https://tailwindtraders.com](https://tailwindtraders.com)
 
@@ -21,7 +25,7 @@ For this demo reference, we built several consumer and line-of-business applicat
 
 With the following ARM template you can automate the creation of the resources for this website.
 
-[![Deploy to Azure](Documents/Images/deploy-to-azure.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FTailwindTraders-Website%2Fmaster%2FDeploy%2Fdeployment.json)
+[![Deploy to Azure](Documents/Images/deploy-to-azure.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMicrosoft%2FTailwindTraders-Website%2Fmain%2FDeploy%2Fdeployment.json)
 
 When you deploy this website to Azure you can define the [Backend](https://github.com/Microsoft/TailwindTraders-Backend) you want to use in case you have deploy your own backend. By defaults it is configured the public Backend environment provided by Microsoft.
 
@@ -41,7 +45,7 @@ And it will return your base [TailwindTraders-Backend](https://github.com/Micros
 
 Please follow these steps to deploy the web in the same AKS where Backend is running instead of deploying to an App Service.
 
-**Note**: Website supports [Devspaces deployment](./Documents/Devspaces.md).
+**Note**: Website supports [Bridge to Kubernetes Deployment](https://github.com/Microsoft/TailwindTraders-Backend/README.md#running-using-bridge-to-kubernetes).
 
 ## Pre-Requisites:
 
